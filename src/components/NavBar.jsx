@@ -1,72 +1,115 @@
-import React from "react";
+import React, { useState } from "react";
 import logo from "../assets/logo.png";
 import search_icon from "../assets/search_icon.svg";
 import bell_icon from "../assets/bell_icon.svg";
 import profile_img from "../assets/profile_img.png";
 import caret_icon from "../assets/caret_icon.svg";
-import { Link } from "react-router";
-import { useNavigate } from "react-router";
-import { useState } from "react";
+import { Link, useNavigate } from "react-router";
 
 function NavBar() {
   const [text, setText] = useState("");
+  const [menuOpen, setMenuOpen] = useState(false);
+  // const [showSearch, setShowSearch] = useState(false);
+
   const navigate = useNavigate();
 
   const handleSearch = () => {
     navigate("/search", { state: { query: text } });
     setText("");
   };
+
   return (
-    <>
-      <div className="navbar w-full flex justify-between fixed text-[#e5e5e5] py-3 px-[6%] z-50 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl p-6">
-        <div className="navbar-left flex items-center gap-10">
-          <Link to={"/"}>
-            <img src={logo} alt="" className="logo w-24" />
+    <div className="w-full fixed top-0 flex justify-between items-center text-[#e5e5e5] py-3 px-[6%] z-50 bg-white/10 backdrop-blur-md border-b border-white/20">
+      {/* LEFT */}
+      <div className="flex items-center gap-6">
+        <Link to="/">
+          <img src={logo} className="w-20 lg:w-24 flex-shrink-0" />
+        </Link>
+
+        {/* Desktop Menu */}
+        <ul className="hidden lg:flex gap-2 xl:gap-5 items-center">
+          <Link to="/">
+            <li className="cursor-pointer whitespace-nowrap text-xs xl:text-lg">
+              Home
+            </li>
           </Link>
-          <ul className="flex gap-5 ">
-            <Link to={"/"}>
-              <li className="cursor-pointer ">Home</li>
-            </Link>
-            <li className="cursor-pointer">TV Shows</li>
-            <li className="cursor-pointer">Movies</li>
-            <li className="cursor-pointer">New & Popular</li>
-            <li className="cursor-pointer">My List</li>
-            <li className="cursor-pointer ">Browse by Languages</li>
-          </ul>
-        </div>
-        <div className="navbar-right flex items-center gap-5  ">
+
+          <li className="cursor-pointer whitespace-nowrap text-xs xl:text-lg">
+            TV Shows
+          </li>
+          <li className="cursor-pointer whitespace-nowrap text-xs xl:text-lg">
+            Movies
+          </li>
+          <li className="cursor-pointer whitespace-nowrap text-xs xl:text-lg">
+            New & Popular
+          </li>
+          <li className="cursor-pointer whitespace-nowrap text-xs xl:text-lg">
+            My List
+          </li>
+          <li className="cursor-pointer whitespace-nowrap text-xs xl:text-lg">
+            Browse by Languages
+          </li>
+        </ul>
+      </div>
+
+      {/* RIGHT */}
+      <div className="flex items-center gap-2 xl:gap-4">
+        {/* Desktop Search */}
+        <div className="flex items-center bg-white rounded-md overflow-hidden">
           <input
             type="text"
             placeholder="Search Movie"
             value={text}
             onChange={(e) => setText(e.target.value)}
-            className="h-8 w-full p-3 border-none outline-none rounded-md text-black"
+            className="h-7 w-24 xl:w-48  p-2 placeholder:text-xs xl:placeholder:text-base  outline-none text-black"
           />
 
           <img
             src={search_icon}
-            alt=""
             onClick={handleSearch}
-            className="cursor-pointer absolute w-8 right-[270px] bg-black p-1 rounded filter invert "
+            className="cursor-pointer w-6 bg-black p-1 filter invert"
           />
+        </div>
 
-          <p>children</p>
-          <img src={bell_icon} alt="" className="cursor-pointer w-5" />
+        <p className="hidden lg:block">Children</p>
 
-          <div className="navbar-profile group flex items-center gap-3 cursor-pointer relative">
-            <img src={profile_img} alt="" className="profile rounded-md" />
-            <img src={caret_icon} alt="" />
+        <img src={bell_icon} className="cursor-pointer w-5 hidden md:block" />
 
-            {/* Dropdown */}
-            <div className="dropdown hidden absolute group-hover:flex top-full right-0  bg-[#191919] w-40 p-4 rounded-sm flex-col ">
-              <p className="text-[13px] cursor-pointer underline">
-                Sign Out of Netflix
-              </p>
-            </div>
+        {/* Profile */}
+        <div className="navbar-profile group flex items-center gap-2 cursor-pointer relative">
+          <img src={profile_img} className="rounded-md w-8" />
+          <img src={caret_icon} className="hidden md:block" />
+
+          <div className="dropdown hidden absolute group-hover:flex top-full right-0 bg-[#191919] w-40 p-4 rounded-sm flex-col">
+            <p className="text-[13px] cursor-pointer underline">
+              Sign Out of Netflix
+            </p>
           </div>
         </div>
+
+        {/* Hamburger */}
+        <div
+          className="lg:hidden text-2xl cursor-pointer"
+          onClick={() => setMenuOpen(!menuOpen)}
+        >
+          ☰
+        </div>
       </div>
-    </>
+
+      {/* Mobile Menu */}
+      {menuOpen && (
+        <div className="absolute top-16 left-0 w-full bg-black flex flex-col items-center gap-5 py-6 lg:hidden">
+          <Link to="/" onClick={() => setMenuOpen(false)}>
+            Home
+          </Link>
+          <p>TV Shows</p>
+          <p>Movies</p>
+          <p>New & Popular</p>
+          <p>My List</p>
+          <p>Browse by Languages</p>
+        </div>
+      )}
+    </div>
   );
 }
 
